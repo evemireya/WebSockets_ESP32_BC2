@@ -1,15 +1,17 @@
 # Cuestionario de Evaluación: Comunicación por Sockets 📝
 
-**Nombre del Estudiante:** _______________________
-**Fecha:** _______________________
+**Nombre del Estudiante:** Evelyn Mena
+**Fecha:** 11/03/2026
 
 *Instrucciones: Responde a las siguientes preguntas basándote en la teoría de redes y en el análisis del código de nuestro proyecto. Sube este archivo con tus respuestas a tu repositorio como evidencia de trabajo.*
 
 1. **¿Qué es una Dirección IP y para qué sirve en nuestro proyecto?**
    > *Tu respuesta aquí*
+   > Es una forma de como podemos ubicar un servicio como si tuviera una identidad.
 
 2. **¿Qué es un Puerto de red? (Menciona qué puerto estamos usando en el código de la ESP32).**
    > *Tu respuesta aquí*
+   > Es de lo que se trata el servicio que estamos dando, 
 
 3. **Define con tus propias palabras qué es un Servidor en informática.**
    > *Tu respuesta aquí*
