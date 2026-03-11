@@ -43,4 +43,7 @@
 
 10. **Describe brevemente el flujo de datos: ¿Qué camino recorre la información desde que giras el potenciómetro físicamente hasta que la barra se mueve en la pantalla de la computadora?**
     > *Tu respuesta aquí*
-    > 
+    > Primero se conecta a la red, luego crea el socket servidor, espera la conexión e inicia el programa, Python ejecuta y hay comunicación por socket, el ESP32 evia los datos y Python los recibe, se procesa el valor y actualiza la interfaz, después barra de Tkinter se mueve y ESP32 recibe por último Controla LED y se repite elciclo.
+
+
+
