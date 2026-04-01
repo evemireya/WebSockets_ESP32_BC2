@@ -60,17 +60,74 @@ def led_off():
 # --- INTERFAZ GRÁFICA ---
 root = tk.Tk()
 root.title("Control ESP32 - Instituto Cordillera")
+root.geometry("500x320")  # Ventana un poco más grande
 
 tk.Label(root, text="CONTROL DE DISPOSITIVO", font=("Arial", 12, "bold")).grid(row=0, column=0, columnspan=2, pady=10)
 
 lbl_valor = tk.Label(root, text="Potenciómetro: 0")
 lbl_valor.grid(row=1, column=0, columnspan=2)
 
-progress = ttk.Progressbar(root, length=200, maximum=4095)
-progress.grid(row=2, column=0, columnspan=2, padx=20, pady=10)
+# Configurar columnas para que el contenido se expanda proporcionalmente
+root.grid_columnconfigure(0, weight=1)
+root.grid_columnconfigure(1, weight=1)
 
-tk.Button(root, text="Encender LED", command=led_on, bg="green", fg="white").grid(row=3, column=0, padx=10, pady=10)
-tk.Button(root, text="Apagar LED", command=led_off, bg="red", fg="white").grid(row=3, column=1, padx=10, pady=10)
+progress = ttk.Progressbar(root, maximum=4095)
+progress.grid(row=2, column=0, columnspan=2, padx=20, pady=10, sticky="ew")
+
+# Botones con bordes redondeados mediante Canvas personalizado
+def _create_rounded_rect(canvas, x1, y1, x2, y2, r, **kwargs):
+    points = [
+        x1+r, y1,
+        x2-r, y1,
+        x2, y1,
+        x2, y1+r,
+        x2, y2-r,
+        x2, y2,
+        x2-r, y2,
+        x1+r, y2,
+        x1, y2,
+        x1, y2-r,
+        x1, y1+r,
+        x1, y1
+    ]
+    return canvas.create_polygon(points, smooth=True, **kwargs)
+
+class RoundedButton(tk.Canvas):
+    def __init__(self, master, text, command, bg, activebg, fg="white", radius=20, width=160, height=45, **kwargs):
+        super().__init__(master, width=width, height=height, highlightthickness=0, bd=0, bg=master['bg'], **kwargs)
+        self.command = command
+        self.bg = bg
+        self.activebg = activebg
+        self.fg = fg
+        self.radius = radius
+        self.rect = _create_rounded_rect(self, 2, 2, width-2, height-2, radius, fill=bg, outline="")
+        self.text_id = self.create_text(width/2, height/2, text=text, fill=fg, font=("Arial", 10, "bold"))
+        self.bind('<Button-1>', self._on_press)
+        self.bind('<ButtonRelease-1>', self._on_release)
+        self.bind('<Enter>', self._on_enter)
+        self.bind('<Leave>', self._on_leave)
+
+    def _on_press(self, event):
+        self.itemconfig(self.rect, fill=self.activebg)
+
+    def _on_release(self, event):
+        self.itemconfig(self.rect, fill=self.bg)
+        if self.command:
+            self.command()
+
+    def _on_enter(self, event):
+        self.config(cursor="hand2")
+
+    def _on_leave(self, event):
+        self.config(cursor="")
+
+btn_on = RoundedButton(root, text="Encender LED", command=led_on,
+                       bg="#7B1FA2", activebg="#E040FB")
+btn_on.grid(row=3, column=0, padx=10, pady=10)
+
+btn_off = RoundedButton(root, text="Apagar LED", command=led_off,
+                        bg="#E040FB", activebg="#7B1FA2")
+btn_off.grid(row=3, column=1, padx=10, pady=10)
 
 threading.Thread(target=conectar, daemon=True).start()
 
